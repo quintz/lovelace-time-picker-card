@@ -11,6 +11,7 @@ import { css, CSSResult, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ClassInfo, classMap } from 'lit/directives/class-map.js';
 import { actionHandler } from './action-handler-directive';
+import './components/date-unit.component';
 import './components/time-period.component';
 import './components/time-unit.component';
 import {
@@ -25,6 +26,7 @@ import {
   ENTITY_DOMAIN,
 } from './const';
 import './editor';
+import { Day } from './models/day';
 import { Hour } from './models/hour';
 import { Minute } from './models/minute';
 import { Second } from './models/second';
@@ -50,6 +52,7 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
   @property({ type: Object }) hass!: HomeAssistant;
   @property() private config!: TimePickerCardConfig;
   @property() private time!: Time;
+  @property() private day?: Day;
   @property() private period!: Period;
 
   private bounce: number | undefined;
@@ -86,6 +89,10 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
     return this.config.hour_mode === 12;
   }
 
+  private get shouldShowDate(): boolean {
+    return this.entity?.attributes.has_date === true && this.config.hide?.date !== true;
+  }
+
   private get layoutAlign(): Layout.AlignControls {
     return this.config.layout?.align_controls ?? DEFAULT_LAYOUT_ALIGN_CONTROLS;
   }
@@ -101,6 +108,14 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
     return {
       'time-picker-row': true,
       'with-header-name': this.hasNameInHeader,
+      embedded: this.isEmbedded,
+    };
+  }
+
+  private get dateRowClass(): ClassInfo {
+    return {
+      'date-picker-row': true,
+      [`layout-${this.layoutAlign}`]: true,
       embedded: this.isEmbedded,
     };
   }
@@ -187,6 +202,13 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
     this.time = new Time(hourInstance, minuteInstance, secondInstance, this.config.link_values);
     this.period = hourInstance.value >= 12 ? Period.PM : Period.AM;
 
+    if (this.shouldShowDate) {
+      const { year, month, day } = this.entity.attributes;
+      this.day = new Day(new Date(year, month - 1, day));
+    } else {
+      this.day = undefined;
+    }
+
     return html`
       <ha-card class=${classMap(this.haCardClass)}>
         ${this.hasNameInHeader ? this.renderHeaderName(this.name!) : ''}
@@ -224,6 +246,15 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
               : ''}
           </div>
         </div>
+        ${this.shouldShowDate
+          ? html`<div class=${classMap(this.dateRowClass)}>
+              <date-unit
+                .day=${this.day}
+                .locale=${this.hass.language}
+                @stepChange=${this.onDayStepChange}
+              ></date-unit>
+            </div>`
+          : ''}
       </ha-card>
     `;
   }
@@ -263,6 +294,11 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
     this.debouncedCallHassService();
   }
 
+  private onDayStepChange(event: CustomEvent): void {
+    this.day?.stepUpdate(event.detail.direction);
+    this.debouncedCallHassService();
+  }
+
   private onSecondStepChange(event: CustomEvent): void {
     this.time.secondStep(event.detail.direction);
     this.debouncedCallHassService();
@@ -282,10 +318,16 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
       throw new Error('Unable to update datetime');
     }
 
-    return this.hass.callService(ENTITY_DOMAIN, 'set_datetime', {
+    const serviceData: Record<string, string> = {
       entity_id: this.entity!.entity_id,
       time: this.time.value,
-    });
+    };
+
+    if (this.shouldShowDate && this.day) {
+      serviceData.date = this.day.value;
+    }
+
+    return this.hass.callService(ENTITY_DOMAIN, 'set_datetime', serviceData);
   }
 
   static get styles(): CSSResult {
@@ -365,6 +407,29 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
       }
 
       .time-picker-content.layout-right {
+        justify-content: flex-end;
+      }
+
+      .date-picker-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0 16px 16px;
+      }
+
+      .date-picker-row.embedded {
+        padding: 0;
+      }
+
+      .date-picker-row.layout-left {
+        justify-content: flex-start;
+      }
+
+      .date-picker-row.layout-center {
+        justify-content: center;
+      }
+
+      .date-picker-row.layout-right {
         justify-content: flex-end;
       }
 

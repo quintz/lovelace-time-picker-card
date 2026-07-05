@@ -45,6 +45,7 @@ export interface TimePickerHideConfig {
   name?: boolean;
   icon?: boolean;
   seconds?: boolean;
+  date?: boolean;
 }
 
 export enum Direction {
