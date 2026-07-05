@@ -11,6 +11,8 @@ export interface TimePickerCardConfig extends LovelaceCardConfig {
   delay?: number;
   layout?: TimePickerLayoutConfig;
   hide?: TimePickerHideConfig;
+  label?: TimePickerLabelConfig;
+  style?: TimePickerStyleConfig;
   tap_action?: ActionConfig;
   double_tap_action?: ActionConfig;
   hold_action?: ActionConfig;
@@ -39,6 +41,27 @@ export namespace Layout {
     HEADER = 'header',
     INSIDE = 'inside',
   }
+}
+
+export type LabelPosition = 'left' | 'right' | 'top' | 'bottom';
+
+export interface TimePickerLabelConfig {
+  text?: string;
+  secondary?: string;
+  position?: LabelPosition;
+}
+
+export interface TimePickerStyleConfig {
+  background?: string;
+  text_color?: string;
+  icon_color?: string;
+  time_font_size?: string;
+  time_input_width?: string;
+  date_font_size?: string;
+  label_color?: string;
+  label_font_size?: string;
+  secondary_label_color?: string;
+  secondary_label_font_size?: string;
 }
 
 export interface TimePickerHideConfig {

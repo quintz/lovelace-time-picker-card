@@ -61,7 +61,7 @@ export class DateUnitComponent extends LitElement {
         border-bottom: 2px solid var(--tpc-elements-background-color);
         color: var(--tpc-text-color, #fff);
         text-align: center;
-        font-size: 1em;
+        font-size: var(--tpc-date-font-size, 1em);
         user-select: none;
       }
     `;

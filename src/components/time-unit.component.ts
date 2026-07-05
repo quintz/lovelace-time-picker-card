@@ -69,14 +69,14 @@ export class TimeUnitComponent extends LitElement {
       }
 
       .time-input {
-        width: 30px;
+        width: var(--tpc-time-input-width, 30px);
         padding: var(--tpc-control-padding);
         background: var(--tpc-elements-background-color);
         border: 0;
         border-bottom: 2px solid var(--tpc-elements-background-color);
         color: var(--tpc-text-color, #fff);
         text-align: center;
-        font-size: 1em;
+        font-size: var(--tpc-time-font-size, 1em);
         -moz-appearance: textfield;
 
         transition: border-color 0.2s ease-in-out;

@@ -10,6 +10,7 @@ import { HassEntity } from 'home-assistant-js-websocket';
 import { css, CSSResult, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ClassInfo, classMap } from 'lit/directives/class-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { actionHandler } from './action-handler-directive';
 import './components/date-unit.component';
 import './components/time-period.component';
@@ -32,7 +33,7 @@ import { Minute } from './models/minute';
 import { Second } from './models/second';
 import { Time } from './models/time';
 import { Partial } from './partials';
-import { Layout, Period, TimePickerCardConfig, TimePickerHideConfig } from './types';
+import { LabelPosition, Layout, Period, TimePickerCardConfig, TimePickerHideConfig } from './types';
 
 console.info(
   `%c  TIME-PICKER-CARD  \n%c  Version ${CARD_VERSION}    `,
@@ -91,6 +92,41 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
 
   private get shouldShowDate(): boolean {
     return this.entity?.attributes.has_date === true && this.config.hide?.date !== true;
+  }
+
+  private get shouldShowLabel(): boolean {
+    return Boolean(this.config.label?.text);
+  }
+
+  private get labelPosition(): LabelPosition {
+    return this.config.label?.position ?? 'left';
+  }
+
+  private get cardStyles(): Record<string, string> {
+    const s = this.config.style ?? {};
+    const mapping: Record<string, string | undefined> = {
+      '--tpc-elements-background-color': s.background,
+      '--tpc-text-color': s.text_color,
+      '--tpc-icon-color': s.icon_color,
+      '--tpc-time-font-size': s.time_font_size,
+      '--tpc-time-input-width': s.time_input_width,
+      '--tpc-date-font-size': s.date_font_size,
+      '--tpc-label-color': s.label_color,
+      '--tpc-label-font-size': s.label_font_size,
+      '--tpc-label-secondary-color': s.secondary_label_color,
+      '--tpc-label-secondary-font-size': s.secondary_label_font_size,
+    };
+
+    return Object.fromEntries(
+      Object.entries(mapping).filter(([, value]) => value !== undefined)
+    ) as Record<string, string>;
+  }
+
+  private get bodyClass(): ClassInfo {
+    return {
+      'card-body': true,
+      [`label-${this.labelPosition}`]: this.shouldShowLabel,
+    };
   }
 
   private get layoutAlign(): Layout.AlignControls {
@@ -179,6 +215,22 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
     return html`${visibleElements}`;
   }
 
+  private renderLabel(): TemplateResult {
+    return html`<div
+      class="tpc-label"
+      @action=${this.handleAction}
+      .actionHandler="${actionHandler({
+        hasHold: hasAction(this.config.hold_action),
+        hasDoubleClick: hasAction(this.config.double_tap_action),
+      })}"
+    >
+      <div class="tpc-label-text">${this.config.label!.text}</div>
+      ${this.config.label?.secondary
+        ? html`<div class="tpc-label-secondary">${this.config.label.secondary}</div>`
+        : ''}
+    </div>`;
+  }
+
   render(): TemplateResult | null {
     if (!this.entity) {
       return Partial.error('Entity not found', this.config);
@@ -210,8 +262,11 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
     }
 
     return html`
-      <ha-card class=${classMap(this.haCardClass)}>
+      <ha-card class=${classMap(this.haCardClass)} style=${styleMap(this.cardStyles)}>
         ${this.hasNameInHeader ? this.renderHeaderName(this.name!) : ''}
+        <div class=${classMap(this.bodyClass)}>
+          ${this.shouldShowLabel ? this.renderLabel() : ''}
+          <div class="picker-wrapper">
         <div class=${classMap(this.rowClass)}>
           ${this.hasNameInside
             ? this.renderNestedName(this.name!, this.entity, this.config.hide)
@@ -255,6 +310,8 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
               ></date-unit>
             </div>`
           : ''}
+          </div>
+        </div>
       </ha-card>
     `;
   }
@@ -431,6 +488,76 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
 
       .date-picker-row.layout-right {
         justify-content: flex-end;
+      }
+
+      .card-body {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .card-body.label-right {
+        flex-direction: row-reverse;
+      }
+
+      .card-body.label-top {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .card-body.label-bottom {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .picker-wrapper {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .tpc-label {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+        padding: 16px;
+        cursor: pointer;
+      }
+
+      .label-left > .tpc-label {
+        text-align: right;
+        padding-right: 0;
+      }
+
+      .label-right > .tpc-label {
+        text-align: left;
+        padding-left: 0;
+      }
+
+      .label-top > .tpc-label {
+        text-align: center;
+        padding: 16px 16px 0;
+      }
+
+      .label-bottom > .tpc-label {
+        text-align: center;
+        padding: 0 16px 16px;
+      }
+
+      .thin .tpc-label,
+      .embedded .tpc-label {
+        padding: 8px;
+      }
+
+      .tpc-label-text {
+        color: var(--tpc-label-color, var(--primary-text-color));
+        font-size: var(--tpc-label-font-size, 1.2em);
+      }
+
+      .tpc-label-secondary {
+        color: var(--tpc-label-secondary-color, var(--secondary-text-color));
+        font-size: var(--tpc-label-secondary-font-size, 0.9em);
       }
 
       .entity-icon {
