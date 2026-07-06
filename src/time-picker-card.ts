@@ -328,7 +328,9 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
           ? html`<div class=${classMap(this.dateRowClass)}>
               <date-unit
                 .day=${this.day}
-                .locale=${this.hass.language}
+                .locale=${this.config.date?.locale ?? this.hass.language}
+                .format=${this.config.date?.format ?? 'short'}
+                .showWeekday=${this.config.date?.show_weekday !== false}
                 @stepChange=${this.onDayStepChange}
               ></date-unit>
             </div>`
@@ -375,7 +377,7 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
   }
 
   private onDayStepChange(event: CustomEvent): void {
-    this.day?.stepUpdate(event.detail.direction);
+    this.day?.stepUpdate(event.detail.direction, this.config.date?.day_step ?? 1);
     this.debouncedCallHassService();
   }
 

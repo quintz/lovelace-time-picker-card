@@ -35,6 +35,10 @@ const NAME_TO_LABEL_MAP = {
   offset_y: 'Label offset Y',
   picker_offset_x: 'Picker offset X',
   picker_offset_y: 'Picker offset Y',
+  show_weekday: 'Show weekday',
+  format: 'Date format',
+  day_step: 'Day step (arrow click)',
+  locale: 'Language override (e.g. de, en-GB)',
 };
 
 const SCHEMA = [
@@ -120,6 +124,33 @@ const SCHEMA = [
           { name: 'icon', type: 'boolean' },
           { name: 'seconds', type: 'boolean' },
           { name: 'date', type: 'boolean' },
+        ],
+      },
+    ],
+  },
+  {
+    type: 'expandable',
+    name: 'date',
+    title: 'Date picker',
+    schema: [
+      { name: 'show_weekday', type: 'boolean', default: true },
+      {
+        name: 'format',
+        type: 'select',
+        options: [
+          ['short', 'short (04.07.2026)'],
+          ['long', 'long (4. Juli 2026)'],
+        ],
+      },
+      {
+        type: 'grid',
+        name: '',
+        schema: [
+          {
+            name: 'day_step',
+            selector: { number: { min: 1, max: 30, step: 1, mode: 'box' } },
+          },
+          { name: 'locale', selector: { text: {} } },
         ],
       },
     ],

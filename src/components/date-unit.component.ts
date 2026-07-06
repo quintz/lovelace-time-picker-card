@@ -12,12 +12,14 @@ export class DateUnitComponent extends LitElement {
 
   @property() private day!: Day;
   @property() private locale = 'en';
+  @property() private format: 'short' | 'long' = 'short';
+  @property() private showWeekday = true;
 
   render(): TemplateResult {
     return html`
       <div class="date-unit">
         ${this.renderStepChanger(Direction.DOWN)}
-        <div class="date-label">${this.day.toString(this.locale)}</div>
+        <div class="date-label">${this.day.toString(this.locale, this.format, this.showWeekday)}</div>
         ${this.renderStepChanger(Direction.UP)}
       </div>
     `;

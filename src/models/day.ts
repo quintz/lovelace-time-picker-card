@@ -28,14 +28,19 @@ export class Day {
   }
 
   /**
-   * Human readable, locale-aware label - e.g. "Sa., 04.07.2026"
+   * Human readable, locale-aware label.
+   * format 'short' -> "Sa., 04.07.2026", format 'long' -> "Samstag, 4. Juli 2026"
    */
-  toString(locale = 'en'): string {
-    return this._date.toLocaleDateString(locale, {
-      weekday: 'short',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+  toString(locale = 'en', format: 'short' | 'long' = 'short', showWeekday = true): string {
+    const options: Intl.DateTimeFormatOptions =
+      format === 'long'
+        ? { day: 'numeric', month: 'long', year: 'numeric' }
+        : { day: '2-digit', month: '2-digit', year: 'numeric' };
+
+    if (showWeekday) {
+      options.weekday = format === 'long' ? 'long' : 'short';
+    }
+
+    return this._date.toLocaleDateString(locale, options);
   }
 }

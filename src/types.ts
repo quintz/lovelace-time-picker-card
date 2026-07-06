@@ -13,6 +13,7 @@ export interface TimePickerCardConfig extends LovelaceCardConfig {
   hide?: TimePickerHideConfig;
   label?: TimePickerLabelConfig;
   style?: TimePickerStyleConfig;
+  date?: TimePickerDateConfig;
   tap_action?: ActionConfig;
   double_tap_action?: ActionConfig;
   hold_action?: ActionConfig;
@@ -50,6 +51,15 @@ export type CssLength = string | number;
 
 /** CSS color as string ('transparent', 'var(--x)') or [r, g, b] array (from the color picker) */
 export type CssColor = string | number[];
+
+export type DateFormat = 'short' | 'long';
+
+export interface TimePickerDateConfig {
+  show_weekday?: boolean;
+  format?: DateFormat;
+  day_step?: number;
+  locale?: string;
+}
 
 export interface TimePickerLabelConfig {
   text?: string;
