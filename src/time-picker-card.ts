@@ -104,25 +104,39 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
 
   private get cardStyles(): Record<string, string> {
     const s = this.config.style ?? {};
+
+    // Slider liefern Zahlen, YAML darf Strings nutzen. Nackte Zahlen
+    // und numerische Strings ('-15') werden als px interpretiert,
+    // echte CSS-Werte ('2em', '-15px', '50%') bleiben unveraendert.
+    const toLength = (value?: string | number): string | undefined => {
+      if (value === undefined || value === '') {
+        return undefined;
+      }
+      const numeric = typeof value === 'number' ? value : Number(value);
+      return Number.isNaN(numeric) ? String(value) : `${numeric}px`;
+    };
+
+    // Farbwaehler liefert [r, g, b], YAML darf Strings nutzen
+    const toColor = (value?: string | number[]): string | undefined =>
+      Array.isArray(value) ? `rgb(${value.join(', ')})` : value;
+
     const mapping: Record<string, string | undefined> = {
-      '--tpc-elements-background-color': s.background,
-      '--tpc-text-color': s.text_color,
-      '--tpc-icon-color': s.icon_color,
+      '--tpc-elements-background-color': toColor(s.background),
+      '--tpc-text-color': toColor(s.text_color),
+      '--tpc-icon-color': toColor(s.icon_color),
       '--tpc-time-font-size': s.time_font_size,
       '--tpc-time-input-width': s.time_input_width,
       '--tpc-date-font-size': s.date_font_size,
-      '--tpc-label-color': s.label_color,
+      '--tpc-label-color': toColor(s.label_color),
       '--tpc-label-font-size': s.label_font_size,
-      '--tpc-label-secondary-color': s.secondary_label_color,
+      '--tpc-label-secondary-color': toColor(s.secondary_label_color),
       '--tpc-label-secondary-font-size': s.secondary_label_font_size,
       '--tpc-font-family': s.font_family,
       '--tpc-time-input-margin': s.time_input_margin,
-      '--tpc-picker-offset-x': s.picker_offset_x,
-      '--tpc-picker-offset-y': s.picker_offset_y,
-      '--tpc-label-offset-x': this.config.label?.offset_x,
-      '--tpc-label-offset-y': this.config.label?.offset_y,
-      '--tpc-picker-offset-x': s.picker_offset_x,
-      '--tpc-picker-offset-y': s.picker_offset_y,
+      '--tpc-label-offset-x': toLength(this.config.label?.offset_x),
+      '--tpc-label-offset-y': toLength(this.config.label?.offset_y),
+      '--tpc-picker-offset-x': toLength(s.picker_offset_x),
+      '--tpc-picker-offset-y': toLength(s.picker_offset_y),
     };
 
     return Object.fromEntries(
