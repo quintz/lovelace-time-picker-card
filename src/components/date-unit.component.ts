@@ -57,7 +57,7 @@ export class DateUnitComponent extends LitElement {
       }
 
       .date-label {
-        min-width: 140px;
+        min-width: var(--tpc-date-width, 140px);
         padding: var(--tpc-control-padding);
         background: var(--tpc-elements-background-color);
         border-bottom: 2px solid var(--tpc-elements-background-color);

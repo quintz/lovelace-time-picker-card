@@ -35,6 +35,7 @@ const NAME_TO_LABEL_MAP = {
   offset_y: 'Label offset Y',
   picker_offset_x: 'Picker offset X',
   picker_offset_y: 'Picker offset Y',
+  date_width: 'Date box width',
   show_weekday: 'Show weekday',
   format: 'Date format',
   day_step: 'Day step (arrow click)',
@@ -210,6 +211,12 @@ const SCHEMA = [
           { name: 'time_font_size', selector: { text: {} } },
           { name: 'time_input_width', selector: { text: {} } },
           { name: 'date_font_size', selector: { text: {} } },
+          {
+            name: 'date_width',
+            selector: {
+              number: { min: 40, max: 400, step: 5, unit_of_measurement: 'px', mode: 'slider' },
+            },
+          },
           { name: 'label_font_size', selector: { text: {} } },
           { name: 'secondary_label_font_size', selector: { text: {} } },
           { name: 'font_family', selector: { text: {} } },

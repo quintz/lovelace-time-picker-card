@@ -127,6 +127,7 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
       '--tpc-time-font-size': s.time_font_size,
       '--tpc-time-input-width': s.time_input_width,
       '--tpc-date-font-size': s.date_font_size,
+      '--tpc-date-width': toLength(s.date_width),
       '--tpc-label-color': toColor(s.label_color),
       '--tpc-label-font-size': s.label_font_size,
       '--tpc-label-secondary-color': toColor(s.secondary_label_color),

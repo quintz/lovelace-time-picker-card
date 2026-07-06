@@ -77,6 +77,7 @@ export interface TimePickerStyleConfig {
   time_font_size?: string;
   time_input_width?: string;
   date_font_size?: string;
+  date_width?: CssLength;
   label_color?: CssColor;
   label_font_size?: string;
   secondary_label_color?: CssColor;
