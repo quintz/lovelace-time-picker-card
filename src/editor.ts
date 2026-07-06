@@ -31,9 +31,9 @@ const NAME_TO_LABEL_MAP = {
   secondary_label_font_size: 'Secondary label font size',
   font_family: 'Font family',
   time_input_margin: 'Time input margin',
-  offset_x: 'Offset X (e.g. 40px)',
-  offset_y: 'Offset Y (e.g. -8px)',
-  picker_offset_x: 'Picker offset X (e.g. -30px)',
+  offset_x: 'Label offset X',
+  offset_y: 'Label offset Y',
+  picker_offset_x: 'Picker offset X',
   picker_offset_y: 'Picker offset Y',
 };
 
@@ -146,8 +146,18 @@ const SCHEMA = [
         type: 'grid',
         name: '',
         schema: [
-          { name: 'offset_x', selector: { text: {} } },
-          { name: 'offset_y', selector: { text: {} } },
+          {
+            name: 'offset_x',
+            selector: {
+              number: { min: -100, max: 100, step: 1, unit_of_measurement: 'px', mode: 'slider' },
+            },
+          },
+          {
+            name: 'offset_y',
+            selector: {
+              number: { min: -100, max: 100, step: 1, unit_of_measurement: 'px', mode: 'slider' },
+            },
+          },
         ],
       },
     ],
@@ -162,21 +172,29 @@ const SCHEMA = [
         name: '',
         schema: [
           { name: 'background', selector: { text: {} } },
-          { name: 'text_color', selector: { text: {} } },
-          { name: 'icon_color', selector: { text: {} } },
+          { name: 'text_color', selector: { color_rgb: {} } },
+          { name: 'icon_color', selector: { color_rgb: {} } },
+          { name: 'label_color', selector: { color_rgb: {} } },
+          { name: 'secondary_label_color', selector: { color_rgb: {} } },
           { name: 'time_font_size', selector: { text: {} } },
           { name: 'time_input_width', selector: { text: {} } },
           { name: 'date_font_size', selector: { text: {} } },
-          { name: 'label_color', selector: { text: {} } },
           { name: 'label_font_size', selector: { text: {} } },
-          { name: 'secondary_label_color', selector: { text: {} } },
           { name: 'secondary_label_font_size', selector: { text: {} } },
           { name: 'font_family', selector: { text: {} } },
           { name: 'time_input_margin', selector: { text: {} } },
-          { name: 'picker_offset_x', selector: { text: {} } },
-          { name: 'picker_offset_y', selector: { text: {} } },
-          { name: 'picker_offset_x', selector: { text: {} } },
-          { name: 'picker_offset_y', selector: { text: {} } },
+          {
+            name: 'picker_offset_x',
+            selector: {
+              number: { min: -100, max: 100, step: 1, unit_of_measurement: 'px', mode: 'slider' },
+            },
+          },
+          {
+            name: 'picker_offset_y',
+            selector: {
+              number: { min: -100, max: 100, step: 1, unit_of_measurement: 'px', mode: 'slider' },
+            },
+          },
         ],
       },
     ],

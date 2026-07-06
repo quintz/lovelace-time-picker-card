@@ -45,30 +45,36 @@ export namespace Layout {
 
 export type LabelPosition = 'left' | 'right' | 'top' | 'bottom';
 
+/** CSS length as string ('-15px', '2em') or number (interpreted as px, e.g. from a slider) */
+export type CssLength = string | number;
+
+/** CSS color as string ('transparent', 'var(--x)') or [r, g, b] array (from the color picker) */
+export type CssColor = string | number[];
+
 export interface TimePickerLabelConfig {
   text?: string;
   secondary?: string;
   position?: LabelPosition;
   overlay?: boolean;
-  offset_x?: string;
-  offset_y?: string;
+  offset_x?: CssLength;
+  offset_y?: CssLength;
 }
 
 export interface TimePickerStyleConfig {
-  background?: string;
-  text_color?: string;
-  icon_color?: string;
+  background?: CssColor;
+  text_color?: CssColor;
+  icon_color?: CssColor;
   time_font_size?: string;
   time_input_width?: string;
   date_font_size?: string;
-  label_color?: string;
+  label_color?: CssColor;
   label_font_size?: string;
-  secondary_label_color?: string;
+  secondary_label_color?: CssColor;
   secondary_label_font_size?: string;
   font_family?: string;
   time_input_margin?: string;
-  picker_offset_x?: string;
-  picker_offset_y?: string;
+  picker_offset_x?: CssLength;
+  picker_offset_y?: CssLength;
 }
 
 export interface TimePickerHideConfig {
