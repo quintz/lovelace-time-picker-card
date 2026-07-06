@@ -33,6 +33,8 @@ const NAME_TO_LABEL_MAP = {
   time_input_margin: 'Time input margin',
   offset_x: 'Offset X (e.g. 40px)',
   offset_y: 'Offset Y (e.g. -8px)',
+  picker_offset_x: 'Picker offset X (e.g. -30px)',
+  picker_offset_y: 'Picker offset Y',
 };
 
 const SCHEMA = [
@@ -139,6 +141,7 @@ const SCHEMA = [
           ['bottom', 'bottom'],
         ],
       },
+      { name: 'overlay', type: 'boolean' },
       {
         type: 'grid',
         name: '',
@@ -170,6 +173,10 @@ const SCHEMA = [
           { name: 'secondary_label_font_size', selector: { text: {} } },
           { name: 'font_family', selector: { text: {} } },
           { name: 'time_input_margin', selector: { text: {} } },
+          { name: 'picker_offset_x', selector: { text: {} } },
+          { name: 'picker_offset_y', selector: { text: {} } },
+          { name: 'picker_offset_x', selector: { text: {} } },
+          { name: 'picker_offset_y', selector: { text: {} } },
         ],
       },
     ],

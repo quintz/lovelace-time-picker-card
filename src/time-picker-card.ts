@@ -117,8 +117,12 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
       '--tpc-label-secondary-font-size': s.secondary_label_font_size,
       '--tpc-font-family': s.font_family,
       '--tpc-time-input-margin': s.time_input_margin,
+      '--tpc-picker-offset-x': s.picker_offset_x,
+      '--tpc-picker-offset-y': s.picker_offset_y,
       '--tpc-label-offset-x': this.config.label?.offset_x,
       '--tpc-label-offset-y': this.config.label?.offset_y,
+      '--tpc-picker-offset-x': s.picker_offset_x,
+      '--tpc-picker-offset-y': s.picker_offset_y,
     };
 
     return Object.fromEntries(
@@ -130,6 +134,7 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
     return {
       'card-body': true,
       [`label-${this.labelPosition}`]: this.shouldShowLabel,
+      'label-overlay': this.shouldShowLabel && this.config.label?.overlay === true,
     };
   }
 
@@ -517,6 +522,7 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
       .picker-wrapper {
         flex: 1 1 auto;
         min-width: 0;
+        transform: translate(var(--tpc-picker-offset-x, 0px), var(--tpc-picker-offset-y, 0px));
       }
 
       .tpc-label {
