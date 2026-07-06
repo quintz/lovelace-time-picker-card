@@ -1,4 +1,4 @@
-name: 'CI'
+name: CI
 
 on:
   push:
@@ -9,13 +9,35 @@ on:
       - master
 
 jobs:
-  test:
+  build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build
-        run: |
-          npm install
-          npm run build
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (lint + bundle)
+        run: npm run build
+
       - name: Test
-        run: npm run test
+        run: npm test
+
+  hacs-validation:
+    name: HACS Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: HACS validation
+        uses: hacs/action@main
+        with:
+          category: plugin
+          # ignoriert den Brands-Check, der nur für Repos im HACS-Default-Store relevant ist
+          ignore: brands
