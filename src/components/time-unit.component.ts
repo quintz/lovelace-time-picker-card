@@ -77,6 +77,8 @@ export class TimeUnitComponent extends LitElement {
         color: var(--tpc-text-color, #fff);
         text-align: center;
         font-size: var(--tpc-time-font-size, 1em);
+        font-family: var(--tpc-font-family, inherit);
+        margin: var(--tpc-time-input-margin, 0);
         -moz-appearance: textfield;
 
         transition: border-color 0.2s ease-in-out;

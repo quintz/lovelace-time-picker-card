@@ -29,6 +29,10 @@ const NAME_TO_LABEL_MAP = {
   label_font_size: 'Label font size',
   secondary_label_color: 'Secondary label color',
   secondary_label_font_size: 'Secondary label font size',
+  font_family: 'Font family',
+  time_input_margin: 'Time input margin',
+  offset_x: 'Offset X (e.g. 40px)',
+  offset_y: 'Offset Y (e.g. -8px)',
 };
 
 const SCHEMA = [
@@ -135,6 +139,14 @@ const SCHEMA = [
           ['bottom', 'bottom'],
         ],
       },
+      {
+        type: 'grid',
+        name: '',
+        schema: [
+          { name: 'offset_x', selector: { text: {} } },
+          { name: 'offset_y', selector: { text: {} } },
+        ],
+      },
     ],
   },
   {
@@ -156,6 +168,8 @@ const SCHEMA = [
           { name: 'label_font_size', selector: { text: {} } },
           { name: 'secondary_label_color', selector: { text: {} } },
           { name: 'secondary_label_font_size', selector: { text: {} } },
+          { name: 'font_family', selector: { text: {} } },
+          { name: 'time_input_margin', selector: { text: {} } },
         ],
       },
     ],

@@ -115,6 +115,10 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
       '--tpc-label-font-size': s.label_font_size,
       '--tpc-label-secondary-color': s.secondary_label_color,
       '--tpc-label-secondary-font-size': s.secondary_label_font_size,
+      '--tpc-font-family': s.font_family,
+      '--tpc-time-input-margin': s.time_input_margin,
+      '--tpc-label-offset-x': this.config.label?.offset_x,
+      '--tpc-label-offset-y': this.config.label?.offset_y,
     };
 
     return Object.fromEntries(
@@ -523,6 +527,8 @@ export class TimePickerCard extends LitElement implements LovelaceCard {
         gap: 2px;
         padding: 16px;
         cursor: pointer;
+        font-family: var(--tpc-font-family, inherit);
+        transform: translate(var(--tpc-label-offset-x, 0px), var(--tpc-label-offset-y, 0px));
       }
 
       .label-left > .tpc-label {

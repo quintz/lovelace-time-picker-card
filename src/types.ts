@@ -49,6 +49,8 @@ export interface TimePickerLabelConfig {
   text?: string;
   secondary?: string;
   position?: LabelPosition;
+  offset_x?: string;
+  offset_y?: string;
 }
 
 export interface TimePickerStyleConfig {
@@ -62,6 +64,8 @@ export interface TimePickerStyleConfig {
   label_font_size?: string;
   secondary_label_color?: string;
   secondary_label_font_size?: string;
+  font_family?: string;
+  time_input_margin?: string;
 }
 
 export interface TimePickerHideConfig {
